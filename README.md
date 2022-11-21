@@ -52,4 +52,24 @@ Same info as above but in table format:
 | "environment"      | "18475718-9058ce45-23bf-4dfc-ba0a-f440ded8f348" | "Fuel Price Demo"                             | "google-maps-api-key" | "AIzaSyC4g4kIXkqPqstXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"              | "Fuel Prices"                 | "2c3bd2f1-32bd-4f28-80ba-b16887c7db6f" | "https://go.postman.co/environment/18475718-9058ce45-23bf-4dfc-ba0a-f440ded8f348" |
 | "environment"      | "16901625-3906e48e-575a-48db-980e-094ac4b1cf9c" | "Electric Vehicles"                           | "key"                 | "PMAK-636c18414577c563685f734a-97XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX" | "Carson - Connected Car 1/24" | "e44c5da2-e1e3-4d1d-8cfd-79c73850e792" | "https://go.postman.co/environment/16901625-3906e48e-575a-48db-980e-094ac4b1cf9c" |
 
-### Fields:
+### CSV Fields:
+- resourceType: the type of resource where this key was found. Either environment or collection. 
+- resourceId: the id of the resource with the matched value. Either an environment ID or collection ID. 
+- resourceName: the name of the resource or collection. 
+- key: the environment or collection variable name. 
+- val: the environment or collection variable value. 
+- workspace: the name of the workspace where the resource resides. 
+- workspaceId: the id of the workspace where the resource resides. 
+- url: a url that will navigate directly to the resource. 
+
+## Logging
+The application creates four log files:
+
+| **Name**    | **Topic**                     |
+|-------------|-------------------------------|
+| error.log   | all errors while running      |       
+| debug.log   | all logs related to debugging |      
+| info.log    | output of the running tasks   |     
+| comined.log | ALL logs                      |        
+
+Once the application is running, you can access them via `tail -f <logfilename.log>`
