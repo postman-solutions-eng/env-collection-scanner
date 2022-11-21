@@ -17,8 +17,14 @@ Global variables cannot be accessed via the postman api and are not scanned by t
 1. Clone the repo
 2. Set up your .env file (see below)
 3. Run `npm install` to install needed dependencies
-4. Run `node index.js` to run the program
+4. Run `node index.js` to run the program  
+    a. Options: `-o` for overwite, `-f` for filename (see below)
 5. Check the output at the end to see any exposed values
+
+### Options
+`-f` or `--filepath`: if included, will write the final output to the file name/path you speficy. Default: `report.csv`.  
+`-o` or `--overwrite`: If included, will overwrite the file with the given filename. If false and a file exists with the given or default filename, a datestring will be appended to make a unique filenae (ex: `report-1669071317405.csv` from `report.csv`). Default `false`.
+
 
 ### Setting up your `.env` file
 The .env file holds values that are specific to your instance of the utility. This repo includes an `.env.sample` file that you can copy and use with a couple adjustments.
@@ -26,57 +32,24 @@ The .env file holds values that are specific to your instance of the utility. Th
 2. `REGEX` is the list of regex values that values will be checked against, in JSON format. We have provided a sample list to start with, but you may add your own regex values as well, just be sure to match the existing formatting. 
 
 
-Example output:
-```JSON
-[
-    {
-        "collectionId": "16901625-31b93a62-bfbd-426b-8558-de1e971f8767",
-        "collectionName": "Copy a Workspace",
-        "key": "newApiKey",
-        "val": "PMAK-62c583145a91792afb3957e1-83XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
-        "workspace": "Clone Utility",
-        "workspaceId": "1c5401cc-692f-4dc3-8962-763712b73425"
-    },
-    {
-        "collectionId": "16901625-31b93a62-bfbd-426b-8558-de1e971f8767",
-        "collectionName": "Copy a Workspace",
-        "key": "originalApiKey",
-        "val": "PMAK-62c583145a91792afb3957e1-83XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
-        "workspace": "Clone Utility",
-        "workspaceId": "1c5401cc-692f-4dc3-8962-763712b73425"
-    },
-    {
-        "collectionId": "16901625-63d6a9c0-d843-45c7-b314-b6679eb65d4a",
-        "collectionName": "Connect your Fleet - Vehicle Management API",
-        "key": "APIKEY",
-        "val": "PMAK-636c18414577c563685f734a-97XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
-        "workspace": "Carson - Connected Car 1/24",
-        "workspaceId": "e44c5da2-e1e3-4d1d-8cfd-79c73850e792"
-    },
-    {
-        "environmentId": "16901625-969efe2c-da39-4569-bc3d-45be9fdd0d90",
-        "environmentName": "Connected Car Workspace",
-        "key": "oldTeamAPIKey",
-        "val": "PMAK-62c583145a91792afb3957e1-83XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
-        "workspace": "Clone Utility",
-        "workspaceId": "1c5401cc-692f-4dc3-8962-763712b73425"
-    },
-    {
-        "environmentId": "18475718-9058ce45-23bf-4dfc-ba0a-f440ded8f348",
-        "environmentName": "Fuel Price Demo",
-        "key": "google-maps-api-key",
-        "val": "AIzaSyC4g4kIXkqPqstXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
-        "workspace": "Fuel Prices",
-        "workspaceId": "2c3bd2f1-32bd-4f28-80ba-b16887c7db6f"
-    },
-    {
-        "environmentId": "16901625-3906e48e-575a-48db-980e-094ac4b1cf9c",
-        "environmentName": "Electric Vehicles",
-        "key": "key",
-        "val": "PMAK-636c18414577c563685f734a-97XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
-        "workspace": "Carson - Connected Car 1/24",
-        "workspaceId": "e44c5da2-e1e3-4d1d-8cfd-79c73850e792"
-    }
-]
+## Example output:
+```CSV
+"resourceType","resourceId","resourceName","key","val","workspace","workspaceId","url"
+"collection","16901625-31b93a62-bfbd-426b-8558-de1e971f8767","Copy a Workspace","newApiKey","PMAK-62c583145a91792afb3957e1-83XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX","Clone Utility","1c5401cc-692f-4dc3-8962-763712b73425","https://go.postman.co/collection/16901625-31b93a62-bfbd-426b-8558-de1e971f8767"
+"collection","16901625-31b93a62-bfbd-426b-8558-de1e971f8767","Copy a Workspace","originalApiKey","PMAK-62c583145a91792afb3957e1-83XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX","Clone Utility","1c5401cc-692f-4dc3-8962-763712b73425","https://go.postman.co/collection/16901625-31b93a62-bfbd-426b-8558-de1e971f8767"
+"collection","16901625-63d6a9c0-d843-45c7-b314-b6679eb65d4a","Connect your Fleet - Vehicle Management API","APIKEY","PMAK-636c18414577c563685f734a-97XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX","Carson - Connected Car 1/24","e44c5da2-e1e3-4d1d-8cfd-79c73850e792","https://go.postman.co/collection/16901625-63d6a9c0-d843-45c7-b314-b6679eb65d4a"
+"environment","16901625-969efe2c-da39-4569-bc3d-45be9fdd0d90","Connected Car Workspace","oldTeamAPIKey","PMAK-62c583145a91792afb3957e1-83XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX","Clone Utility","1c5401cc-692f-4dc3-8962-763712b73425","https://go.postman.co/environment/16901625-969efe2c-da39-4569-bc3d-45be9fdd0d90"
+"environment","18475718-9058ce45-23bf-4dfc-ba0a-f440ded8f348","Fuel Price Demo","google-maps-api-key","AIzaSyC4g4kIXkqPqstXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX","Fuel Prices","2c3bd2f1-32bd-4f28-80ba-b16887c7db6f","https://go.postman.co/environment/18475718-9058ce45-23bf-4dfc-ba0a-f440ded8f348"
+"environment","16901625-3906e48e-575a-48db-980e-094ac4b1cf9c","Electric Vehicles","key","PMAK-636c18414577c563685f734a-97XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX","Carson - Connected Car 1/24","e44c5da2-e1e3-4d1d-8cfd-79c73850e792","https://go.postman.co/environment/16901625-3906e48e-575a-48db-980e-094ac4b1cf9c"
 ``` 
+Same info as above but in table format:
+| **"resourceType"** | **"resourceId"**                                | **"resourceName"**                            | **"key"**             | **"val"**                                                        | **"workspace"**               | **"workspaceId"**                      | **"url"**                                                                         |
+|--------------------|-------------------------------------------------|-----------------------------------------------|-----------------------|------------------------------------------------------------------|-------------------------------|----------------------------------------|-----------------------------------------------------------------------------------|
+| "collection"       | "16901625-31b93a62-bfbd-426b-8558-de1e971f8767" | "Copy a Workspace"                            | "newApiKey"           | "PMAK-62c583145a91792afb3957e1-83XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX" | "Clone Utility"               | "1c5401cc-692f-4dc3-8962-763712b73425" | "https://go.postman.co/collection/16901625-31b93a62-bfbd-426b-8558-de1e971f8767"  |
+| "collection"       | "16901625-31b93a62-bfbd-426b-8558-de1e971f8767" | "Copy a Workspace"                            | "originalApiKey"      | "PMAK-62c583145a91792afb3957e1-83XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX" | "Clone Utility"               | "1c5401cc-692f-4dc3-8962-763712b73425" | "https://go.postman.co/collection/16901625-31b93a62-bfbd-426b-8558-de1e971f8767"  |
+| "collection"       | "16901625-63d6a9c0-d843-45c7-b314-b6679eb65d4a" | "Connect your Fleet - Vehicle Management API" | "APIKEY"              | "PMAK-636c18414577c563685f734a-97XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX" | "Carson - Connected Car 1/24" | "e44c5da2-e1e3-4d1d-8cfd-79c73850e792" | "https://go.postman.co/collection/16901625-63d6a9c0-d843-45c7-b314-b6679eb65d4a"  |
+| "environment"      | "16901625-969efe2c-da39-4569-bc3d-45be9fdd0d90" | "Connected Car Workspace"                     | "oldTeamAPIKey"       | "PMAK-62c583145a91792afb3957e1-83XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX" | "Clone Utility"               | "1c5401cc-692f-4dc3-8962-763712b73425" | "https://go.postman.co/environment/16901625-969efe2c-da39-4569-bc3d-45be9fdd0d90" |
+| "environment"      | "18475718-9058ce45-23bf-4dfc-ba0a-f440ded8f348" | "Fuel Price Demo"                             | "google-maps-api-key" | "AIzaSyC4g4kIXkqPqstXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"              | "Fuel Prices"                 | "2c3bd2f1-32bd-4f28-80ba-b16887c7db6f" | "https://go.postman.co/environment/18475718-9058ce45-23bf-4dfc-ba0a-f440ded8f348" |
+| "environment"      | "16901625-3906e48e-575a-48db-980e-094ac4b1cf9c" | "Electric Vehicles"                           | "key"                 | "PMAK-636c18414577c563685f734a-97XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX" | "Carson - Connected Car 1/24" | "e44c5da2-e1e3-4d1d-8cfd-79c73850e792" | "https://go.postman.co/environment/16901625-3906e48e-575a-48db-980e-094ac4b1cf9c" |
 
+### Fields:
