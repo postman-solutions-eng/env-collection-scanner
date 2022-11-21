@@ -1,7 +1,7 @@
 require('dotenv').config()
 const { Parser } = require('json2csv');
 const postman = require('./postman.js');
-// const logger = require('./logger.js');
+const logger = require('./logger.js');
 
 const regex = JSON.parse(process.env.REGEX)
 const main = async () => {
@@ -18,7 +18,7 @@ const main = async () => {
     const ENVIRONMENT_STRING = "environment"
     const COLLECTION_STRING = "collection"
 
-    const fields = ['resourceType', 'resourceId', 'resourceName', 'key', 'value', 'workspace', 'workspaceId'];
+    const fields = ['resourceType', 'resourceId', 'resourceName', 'key', 'val', 'workspace', 'workspaceId'];
     const opts = { fields };
 
     // filter out public workspaces(Team Workspaces)
@@ -56,19 +56,20 @@ const main = async () => {
     }
 
     //iterate through each collection & environment and check against the regex
-   await scanResourceVariables(collectionArrayTeam, COLLECTION_STRING);
-   await scanResourceVariables(environmentArrayTeam, ENVIRONMENT_STRING);
-
-    //console.warn(JSON.stringify(classifiedEnvInfo, null, 4))
-
+    await scanResourceVariables(collectionArrayTeam, COLLECTION_STRING);
+    await scanResourceVariables(environmentArrayTeam, ENVIRONMENT_STRING);
 
     try {
         //print to csv
+        console.info('Process finished, building output document')
+       // console.warn(JSON.stringify(classifiedEnvInfo, null, 4))
         const parser = new Parser(opts);
         const csv = parser.parse(classifiedEnvInfo, fields);
         console.log(csv)
+        logger.trace(csv)
     } catch (err) {
-        console.error(err);
+        logger.error('encountered error building csv document:')
+        logger.error(err);
     }
 
     async function scanResourceVariables(resourceArray, resourceType) {
@@ -76,32 +77,32 @@ const main = async () => {
             setTimeout(() => { }, 200);
             const resourceId = resourceArray[x];
             const workspaceId = resourceToWorkspaceMap[resourceId];
-            
+
             //get workspace name by id from allworkspaceinfo
             const workspaceMatch = (allWorkspaces.workspaces).find(obj => {
                 return obj.id === workspaceId;
             });
             var workspaceName = workspaceMatch?.name;
             let currentResource
-            if(resourceType == COLLECTION_STRING){
-                currentResource =(await postman.getCollectionById(resourceId)).collection
+            if (resourceType == COLLECTION_STRING) {
+                currentResource = (await postman.getCollectionById(resourceId)).collection
                 if (currentResource.hasOwnProperty("variable")) {
                     var collectionVariables = currentResource.variable
                     var valuesArrSize = collectionVariables.length;
                     const collectionName = currentResource.info.name;
-                    
+
                     if (valuesArrSize !== 0) {
-                        scanValues(valuesArrSize, resourceType, resourceId, collectionName,workspaceName, workspaceId, collectionVariables);
+                        scanValues(valuesArrSize, resourceType, resourceId, collectionName, workspaceName, workspaceId, collectionVariables);
                     }
                 }
-            }else{
+            } else {
                 currentResource = (await postman.getEnvironmentById(resourceId)).environment;
                 const environmentName = currentResource.name;
                 if (currentResource.hasOwnProperty("values")) {
                     var valuesArrSize = currentResource.values.length;
                     if (valuesArrSize !== 0) {
                         //iterate through the key/value pairs in the env
-                        scanValues(valuesArrSize, resourceType, resourceId,environmentName, workspaceName, workspaceId, currentResource.values);
+                        scanValues(valuesArrSize, resourceType, resourceId, environmentName, workspaceName, workspaceId, currentResource.values);
                     }
                 }
             }
@@ -109,7 +110,7 @@ const main = async () => {
         return null;
     }
 
-    function scanValues(valuesArrSize, resourceType, resourceId,resourceName, workspaceName, workspaceId, values) {
+    function scanValues(valuesArrSize, resourceType, resourceId, resourceName, workspaceName, workspaceId, values) {
         for (var i = 0; i < valuesArrSize; i++) {
             for (key in regex) {
                 var regexPattern = regex[key];
