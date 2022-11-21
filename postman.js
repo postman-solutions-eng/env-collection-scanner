@@ -13,7 +13,7 @@ const sendRequest = async (config, errorMessage, attempts = 0) => {
   try {
     attempts = attempts +1
     const response = await axios(config);
-    console.debug(response.data);
+    //console.debug(response.data);
     return response.data;
   }
   catch (e) {
@@ -35,8 +35,7 @@ const sendRequest = async (config, errorMessage, attempts = 0) => {
       return value;
     }
     else {
-      console.info("Ending Migration")
-      console.log("Ending migration")
+      console.log("Ending process")
       process.exit();
     }
 
