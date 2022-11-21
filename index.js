@@ -18,7 +18,7 @@ const main = async () => {
     const ENVIRONMENT_STRING = "environment"
     const COLLECTION_STRING = "collection"
 
-    const fields = ['resourceType', 'resourceId', 'resourceName', 'key', 'val', 'workspace', 'workspaceId'];
+    const fields = ['resourceType', 'resourceId', 'resourceName', 'key', 'val', 'workspace', 'workspaceId','url'];
     const opts = { fields };
 
     // filter out public workspaces(Team Workspaces)
@@ -29,16 +29,13 @@ const main = async () => {
         }
     }
     //iterate through each workspace and store the collection and environment ids
-    //list of all collection and environment ids we will later iterate through
-
     for (x in teamWorkspaceArr) {
         setTimeout(() => { }, 200)
         //get workspace
         const currentWorkspace = (await postman.getWorkspaceById(teamWorkspaceArr[x])).workspace;
-        //check if there is an environment
+       
         if (currentWorkspace && currentWorkspace.hasOwnProperty('environments')) {
             var currentEnvironmentSize = currentWorkspace.environments.length;
-            // Populate Environment Array
             for (var i = 0; i < currentEnvironmentSize; i++) {
                 environmentArrayTeam.push(currentWorkspace.environments[i].uid);
                 resourceToWorkspaceMap[currentWorkspace.environments[i].uid] = currentWorkspace.id
@@ -47,7 +44,6 @@ const main = async () => {
 
         if (currentWorkspace && currentWorkspace.hasOwnProperty('collections')) {
             var currentCollectionSize = currentWorkspace.collections.length;
-            // Populate Collections Array
             for (var i = 0; i < currentCollectionSize; i++) {
                 collectionArrayTeam.push(currentWorkspace.collections[i].uid);
                 resourceToWorkspaceMap[currentWorkspace.collections[i].uid] = currentWorkspace.id
@@ -66,7 +62,7 @@ const main = async () => {
         const parser = new Parser(opts);
         const csv = parser.parse(classifiedEnvInfo, fields);
         console.log(csv)
-        logger.trace(csv)
+        logger.info(csv)
     } catch (err) {
         logger.error('encountered error building csv document:')
         logger.error(err);
@@ -111,6 +107,7 @@ const main = async () => {
     }
 
     function scanValues(valuesArrSize, resourceType, resourceId, resourceName, workspaceName, workspaceId, values) {
+        var url  = `https://go.postman.co/${resourceType}/${resourceId}`
         for (var i = 0; i < valuesArrSize; i++) {
             for (key in regex) {
                 var regexPattern = regex[key];
@@ -132,7 +129,8 @@ const main = async () => {
                             key: envKey,
                             val: newokey,
                             workspace: workspaceName,
-                            workspaceId: workspaceId
+                            workspaceId: workspaceId,
+                            url: url
                         });
                     }
                 }
