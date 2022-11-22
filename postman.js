@@ -1,51 +1,52 @@
 const axios = require('axios');
 const prompt = require('prompt');
-// const log = require('./log.js');
+const logger = require('./logger.js');
 
 axios.defaults.headers.common['x-api-key'] = process.env.POSTMAN_API_KEY;
 axios.defaults.headers.post['Content-Type'] = 'application/json';
 
 const sendRequest = async (config, errorMessage, attempts = 0) => {
-  // if (attempts > 3) {
-  //   console.log(`Attempted to send request ${attempts} times and failed`);
-  //   process.exit();
-  // }
+  if (attempts > 3) {
+   logger.debug(`Attempted to send request ${JSON.stringify(config)}\n${attempts} times and failed`);
+    //process.exit();
+  }
   try {
     attempts = attempts +1
     const response = await axios(config);
-    console.debug(response.data);
+    // logger.debug('attempting retry')
+    logger.debug(response.data);
     return response.data;
   }
   catch (e) {
-    console.error(e);
+    logger.error(`request failed ${config}`)
+    logger.error(e);
     const errorMessageFormatted = `Attempted Request #${attempts} Failed - HTTP Request Error, returned:\n${e.response?.status}: ${e.response?.statusText}, ${JSON.stringify(e.response?.data)}\nWould you like to try again (y/n)?`;
-    console.error(`Error: ${errorMessage}`);
-    const promptSchema = {
-      properties: {
-        tryAgain: {
-          message: errorMessageFormatted,
-          required: true
-        }
-      }
-    };
-    const {tryAgain} = await prompt.get(promptSchema);
-    if(tryAgain==="y"){
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      const value = await sendRequest(config, errorMessage, attempts);
-      return value;
-    }
-    else {
-      console.info("Ending Migration")
-      console.log("Ending migration")
-      process.exit();
-    }
+    logger.error(`Error: ${errorMessage}`);
+    // const promptSchema = {
+    //   properties: {
+    //     tryAgain: {
+    //       message: errorMessageFormatted,
+    //       required: true
+    //     }
+    //   }
+    // };
+    //const {tryAgain} = await prompt.get(promptSchema);
+ //   if(tryAgain==="y"){
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    const value = await sendRequest(config, errorMessage, attempts);
+    return value;
+    // }
+    // else {
+    //   console.log("Ending process")
+    //   process.exit();
+    // }
 
   }
 }
 
 module.exports.getEnvironmentById = async environmentId => {
     const logMessage = `Fetching environment by id: ${environmentId}`;
-    console.info(logMessage);
+    logger.info(logMessage);
     const config = {
       method: 'get',
       url: `https://api.getpostman.com/environments/${environmentId}`
@@ -56,7 +57,7 @@ module.exports.getEnvironmentById = async environmentId => {
   
 module.exports.getCollectionById = async collectionId => {
     const logMessage = `Fetching collection by id: ${collectionId}`;
-    console.info(logMessage);
+    logger.info(logMessage);
     const config = {
       method: 'get',
       url: `https://api.getpostman.com/collections/${collectionId}`
@@ -67,7 +68,7 @@ module.exports.getCollectionById = async collectionId => {
 
 module.exports.getWorkspaceById = async workspaceId => {
   const logMessage = `Fetching workspace by id: ${workspaceId}`;
-  console.info(logMessage);
+  logger.info(logMessage);
   const config = {
     method: 'get',
     url: `https://api.getpostman.com/workspaces/${workspaceId}`
@@ -78,7 +79,7 @@ module.exports.getWorkspaceById = async workspaceId => {
 
 module.exports.createWorkspace = async workspacePayload => {
   const logMessage = `create workspace with data: ${workspacePayload}`;
-  console.info(logMessage);
+  logger.info(logMessage);
 
   const config = {
     method: 'post',
@@ -93,7 +94,7 @@ module.exports.createWorkspace = async workspacePayload => {
 //FIXME: how to create async request without param?
 module.exports.getWorkspaces = async workspaceId => {
     const logMessage = `get all workspaces`;
-    console.info(logMessage);
+    logger.info(logMessage);
   
     const config = {
       method: 'get',
@@ -106,7 +107,7 @@ module.exports.getWorkspaces = async workspaceId => {
 
 module.exports.getAllAPIs = async workspaceId => {
   const logMessage = `get all APIs on workspaceId: ${workspaceId}`;
-  console.info(logMessage);
+  logger.info(logMessage);
   const config = {
     method: 'get',
     url: `https://api.getpostman.com/apis?workspace=${workspaceId}&direction=asc&sort=name`
@@ -118,7 +119,7 @@ module.exports.getAllAPIs = async workspaceId => {
 
 module.exports.deleteAPI = async apiId => {
   const logMessage = `deleting API: ${apiId}`;
-  console.info(logMessage);
+  logger.info(logMessage);
   const config = {
     method: 'delete',
     url: `https://api.getpostman.com/apis/${apiId}`
@@ -131,7 +132,7 @@ module.exports.deleteAPI = async apiId => {
 
 module.exports.getAPIbyId = async apiId => {
   const logMessage = `get API by ID: ${apiId}`;
-  console.info(logMessage);
+  logger.info(logMessage);
 
   var config = {
     method: 'get',
@@ -144,7 +145,7 @@ module.exports.getAPIbyId = async apiId => {
 
 module.exports.createAPI = async (workspaceId, apiPayload) => {
   const logMessage = `create api with on workspace: ${workspaceId} with data:\n ${apiPayload}`;
-  console.info(logMessage);
+  logger.info(logMessage);
   const config = {
     method: 'post',
     url: `https://api.getpostman.com/apis?workspace=${workspaceId}`,
@@ -157,7 +158,7 @@ module.exports.createAPI = async (workspaceId, apiPayload) => {
 
 module.exports.getAPIVersions = async (apiId) => {
   const logMessage = `get api versions: ${apiId}`;
-  console.info(logMessage);
+  logger.info(logMessage);
 
   const config = {
     method: 'get',
@@ -170,7 +171,7 @@ module.exports.getAPIVersions = async (apiId) => {
 
 module.exports.createAPIVersion = async (apiId, apiVersionPayload) => {
   const logMessage = `create API version on apiID: ${apiId} with data:\n ${apiVersionPayload}`;
-  console.info(logMessage);
+  logger.info(logMessage);
 
   const config = {
     method: 'post',
@@ -183,7 +184,7 @@ module.exports.createAPIVersion = async (apiId, apiVersionPayload) => {
 
 module.exports.updateAPIVersion = async (apiId, apiVersionId, apiVersionUpdatePayload) => {
   const logMessage = `create API version meta data on apiID: ${apiId} , versionid: ${apiVersionId} with data:\n ${apiVersionUpdatePayload}`;
-  console.info(logMessage);
+  logger.info(logMessage);
 
   const config = {
     method: 'put',
@@ -197,11 +198,11 @@ module.exports.updateAPIVersion = async (apiId, apiVersionId, apiVersionUpdatePa
 
 module.exports.getAPIVersionSchemaById = async (apiId, versionId, schemaId) => {
   if (!schemaId) {
-    console.info(`No schema for API: ${apiId} version: ${versionId}`);
+    logger.info(`No schema for API: ${apiId} version: ${versionId}`);
     return null;
   }
   const logMessage = `get schema for api:  ${apiId} version: ${versionId} schemaId: ${schemaId}`;
-  console.info(logMessage);
+  logger.info(logMessage);
 
   const config = {
     method: 'get',
@@ -214,7 +215,7 @@ module.exports.getAPIVersionSchemaById = async (apiId, versionId, schemaId) => {
 
 module.exports.getAPIVersionSchema = async (apiId, versionId) => {
   const logMessage = `get api:  ${apiId} version: ${versionId}`;
-  console.info(logMessage);
+  logger.info(logMessage);
 
   const config = {
     method: 'get',
@@ -229,7 +230,7 @@ module.exports.getAPIVersionSchema = async (apiId, versionId) => {
 
 module.exports.createVersionSchema = async (apiId, versionId, schemaPayload) => {
   const logMessage = `create API version schema on api: ${apiId} and version: ${versionId} with data:\n ${schemaPayload}`;
-  console.info(logMessage);
+  logger.info(logMessage);
   const config = {
     method: 'post',
     url: `https://api.getpostman.com/apis/${apiId}/versions/${versionId}/schemas`,
@@ -244,7 +245,7 @@ module.exports.createVersionSchema = async (apiId, versionId, schemaPayload) => 
 // if no draft, call echo
 module.exports.deleteAPIVersion = async (apiId, versionId) => {
   const logMessage = `create API version schema on api: ${apiId} with versionId:\n ${versionId}`;
-  console.info(logMessage);
+  logger.info(logMessage);
 
   const config = {
     method: 'delete',
