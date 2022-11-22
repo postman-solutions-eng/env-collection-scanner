@@ -76,32 +76,23 @@ The application creates four log files:
 Once the application is running, you can access them via `tail -f <logfilename.log>`
 =======
 Same info as above but in table format:
-46
+
+
 | **"resourceType"** | **"resourceId"**                                | **"resourceName"**                            | **"key"**             | **"val"**                                                        | **"workspace"**               | **"workspaceId"**                      | **"url"**                                                                         |
-47
 |--------------------|-------------------------------------------------|-----------------------------------------------|-----------------------|------------------------------------------------------------------|-------------------------------|----------------------------------------|-----------------------------------------------------------------------------------|
-48
 | "collection"       | "16901625-31b93a62-bfbd-426b-8558-de1e971f8767" | "Copy a Workspace"                            | "newApiKey"           | "PMAK-62c583145a91792afb3957e1-83XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX" | "Clone Utility"               | "1c5401cc-692f-4dc3-8962-763712b73425" | "https://go.postman.co/collection/16901625-31b93a62-bfbd-426b-8558-de1e971f8767"  |
-49
 | "collection"       | "16901625-31b93a62-bfbd-426b-8558-de1e971f8767" | "Copy a Workspace"                            | "originalApiKey"      | "PMAK-62c583145a91792afb3957e1-83XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX" | "Clone Utility"               | "1c5401cc-692f-4dc3-8962-763712b73425" | "https://go.postman.co/collection/16901625-31b93a62-bfbd-426b-8558-de1e971f8767"  |
-50
 | "collection"       | "16901625-63d6a9c0-d843-45c7-b314-b6679eb65d4a" | "Connect your Fleet - Vehicle Management API" | "APIKEY"              | "PMAK-636c18414577c563685f734a-97XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX" | "Carson - Connected Car 1/24" | "e44c5da2-e1e3-4d1d-8cfd-79c73850e792" | "https://go.postman.co/collection/16901625-63d6a9c0-d843-45c7-b314-b6679eb65d4a"  |
-51
 | "environment"      | "16901625-969efe2c-da39-4569-bc3d-45be9fdd0d90" | "Connected Car Workspace"                     | "oldTeamAPIKey"       | "PMAK-62c583145a91792afb3957e1-83XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX" | "Clone Utility"               | "1c5401cc-692f-4dc3-8962-763712b73425" | "https://go.postman.co/environment/16901625-969efe2c-da39-4569-bc3d-45be9fdd0d90" |
-52
 | "environment"      | "18475718-9058ce45-23bf-4dfc-ba0a-f440ded8f348" | "Fuel Price Demo"                             | "google-maps-api-key" | "AIzaSyC4g4kIXkqPqstXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"              | "Fuel Prices"                 | "2c3bd2f1-32bd-4f28-80ba-b16887c7db6f" | "https://go.postman.co/environment/18475718-9058ce45-23bf-4dfc-ba0a-f440ded8f348" |
-53
 | "environment"      | "16901625-3906e48e-575a-48db-980e-094ac4b1cf9c" | "Electric Vehicles"                           | "key"                 | "PMAK-636c18414577c563685f734a-97XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX" | "Carson - Connected Car 1/24" | "e44c5da2-e1e3-4d1d-8cfd-79c73850e792" | "https://go.postman.co/environment/16901625-3906e48e-575a-48db-980e-094ac4b1cf9c" |
-54
-​
-55
+
 ### Fields:
-resourceType: the type of resource where this key was found. Either environment or collection
-resourceId: the id of the resource with the matched value. Either an environment ID or collection ID
-resourceName: the name of the resource or collection
-key: the environment or collection variable name
-val: the environment or collection variable value
-workspace: the name of the workspace where the resource resides
-workspaceId: the id of the workspace where the resource resides
-url: a url that will navigate directly to the resource
->>>>>>> Stashed changes
+- resourceType: the type of resource where this key was found. Either environment or collection
+- resourceId: the id of the resource with the matched value. Either an environment ID or collection ID
+- resourceName: the name of the resource or collection
+- key: the environment or collection variable name
+- val: the environment or collection variable value
+- workspace: the name of the workspace where the resource resides
+- workspaceId: the id of the workspace where the resource resides
+- url: a url that will navigate directly to the resource
