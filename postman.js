@@ -6,10 +6,10 @@ axios.defaults.headers.common['x-api-key'] = process.env.POSTMAN_API_KEY;
 axios.defaults.headers.post['Content-Type'] = 'application/json';
 
 const sendRequest = async (config, errorMessage, attempts = 0) => {
-  // if (attempts > 3) {
-  //   console.log(`Attempted to send request ${attempts} times and failed`);
-  //   process.exit();
-  // }
+  if (attempts > 3) {
+   logger.debug(`Attempted to send request ${JSON.stringify(config)}\n${attempts} times and failed`);
+    //process.exit();
+  }
   try {
     attempts = attempts +1
     const response = await axios(config);
@@ -22,24 +22,24 @@ const sendRequest = async (config, errorMessage, attempts = 0) => {
     logger.error(e);
     const errorMessageFormatted = `Attempted Request #${attempts} Failed - HTTP Request Error, returned:\n${e.response?.status}: ${e.response?.statusText}, ${JSON.stringify(e.response?.data)}\nWould you like to try again (y/n)?`;
     logger.error(`Error: ${errorMessage}`);
-    const promptSchema = {
-      properties: {
-        tryAgain: {
-          message: errorMessageFormatted,
-          required: true
-        }
-      }
-    };
-    const {tryAgain} = await prompt.get(promptSchema);
-    if(tryAgain==="y"){
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      const value = await sendRequest(config, errorMessage, attempts);
-      return value;
-    }
-    else {
-      console.log("Ending process")
-      process.exit();
-    }
+    // const promptSchema = {
+    //   properties: {
+    //     tryAgain: {
+    //       message: errorMessageFormatted,
+    //       required: true
+    //     }
+    //   }
+    // };
+    //const {tryAgain} = await prompt.get(promptSchema);
+ //   if(tryAgain==="y"){
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    const value = await sendRequest(config, errorMessage, attempts);
+    return value;
+    // }
+    // else {
+    //   console.log("Ending process")
+    //   process.exit();
+    // }
 
   }
 }

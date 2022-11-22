@@ -2,8 +2,31 @@ require('dotenv').config()
 const { Parser } = require('json2csv');
 const postman = require('./postman.js');
 const logger = require('./logger.js');
+const fs = require("fs");
+const commandLineArgs = require('command-line-args')
 
+
+const optionDefinitions = [
+    { name: 'fileName', alias: 'f', type: String, default: "output.csv" },
+    { name: 'overwrite', alias: 'o', type: Boolean, default: false}
+  ]
+const options = commandLineArgs(optionDefinitions)
+
+//if a filename is not given, it will default to output.csv
+let outputFile;
+if (options.fileName){
+    outputFile = options.fileName;
+  }else{
+    outputFile = "output.csv"
+  }
+
+  //overwriting is the default behavior for fs.writeFile. If !overwrite, we will append date stamp to it to create a new unique file name
+if (!options.overwrite && fs.existsSync(outputFile)){
+    outputFile = outputFile.split('.').join('-' + Date.now() + '.');
+  }
+  
 const regex = JSON.parse(process.env.REGEX)
+
 const main = async () => {
 
     //get a list of all workspaces
@@ -18,8 +41,9 @@ const main = async () => {
     const ENVIRONMENT_STRING = "environment"
     const COLLECTION_STRING = "collection"
 
-    const fields = ['resourceType', 'resourceId', 'resourceName', 'key', 'val', 'workspace', 'workspaceId','url'];
-    const opts = { fields };
+    const csvFields = ['resourceType', 'resourceId', 'resourceName', 'key', 'val', 'workspace', 'workspaceId','url'];
+    const csvOptions = { fields: csvFields };
+
 
     // filter out public workspaces(Team Workspaces)
     for (var i = 0; i < allWorkspaces.workspaces.length; i++) {
@@ -57,15 +81,23 @@ const main = async () => {
 
     try {
         //print to csv
-        console.info('Process finished, building output document')
-       // console.warn(JSON.stringify(classifiedEnvInfo, null, 4))
-        const parser = new Parser(opts);
-        const csv = parser.parse(classifiedEnvInfo, fields);
-        console.log(csv)
-        logger.info(csv)
+        console.info('Scanning complete, building output document')
+        const parser = new Parser(csvOptions);
+        const csv = parser.parse(classifiedEnvInfo, csvFields);
+        writeFile(csv);     
+        logger.debug(csv)
+        console.log(`Process complete, variable scanner report available in ${outputFile}`);
+
     } catch (err) {
-        logger.error('encountered error building csv document:')
-        logger.error(err);
+        logger.error(`Encountered error building csv document: ${err}`)
+    }
+
+    function writeFile(csv) {
+        fs.writeFile(outputFile, csv, (err) => {
+            if (err) {
+                logger.error(`Encountered error writing to file ${err}`);
+            }
+        });
     }
 
     async function scanResourceVariables(resourceArray, resourceType) {
