@@ -22,7 +22,7 @@ Global variables cannot be accessed via the postman api and are not scanned by t
 5. Check the output at the end to see any exposed values
 
 ### Options
-`-f` or `--filepath`: if included, will write the final output to the file name/path you speficy. Default: `report.csv`.  
+`-f` or `--filepath`: if included, will write the final output to the file name/path you speficy. File name should end in `.csv`. Default: `report.csv`.  
 `-o` or `--overwrite`: If included, will overwrite the file with the given filename. If false and a file exists with the given or default filename, a datestring will be appended to make a unique filenae (ex: `report-1669071317405.csv` from `report.csv`). Default `false`.
 
 
@@ -32,7 +32,6 @@ The .env file holds values that are specific to your instance of the utility. Th
 2. `REGEX` is the list of regex values that values will be checked against, in JSON format. We have provided a sample list to start with, but you may add your own regex values as well, just be sure to match the existing formatting. 
 
 
-<<<<<<< Updated upstream
 ## Example output:
 ```CSV
 "resourceType","resourceId","resourceName","key","val","workspace","workspaceId","url"
